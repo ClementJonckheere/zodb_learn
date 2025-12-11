@@ -1,4 +1,7 @@
+# import.py
+import sys
 import csv
+import transaction
 from BTrees.OOBTree import OOBTree
 from utils import get_root
 from models import Region, Country, Airport
@@ -11,6 +14,7 @@ def ensure_btrees(root):
         root.regions = OOBTree()
     if not hasattr(root, "airports"):
         root.airports = OOBTree()
+
 
 def import_data(root, filename: str):
     with open(filename, newline="", encoding="UTF-8") as f:
@@ -74,3 +78,19 @@ def import_data(root, filename: str):
         else:
             print("Unknown file type.")
             return
+
+
+def main():
+    filename = sys.argv[1]
+
+    root = get_root()
+    ensure_btrees(root)
+
+    import_data(root, filename)
+
+    transaction.commit()
+    print("Import terminé et sauvegardé")
+
+
+if __name__ == "__main__":
+    main()
